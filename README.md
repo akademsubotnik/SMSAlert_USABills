@@ -1,5 +1,5 @@
 Goal of this project is:
-Pull list of all bills related to Ukraine into a dictionary
+Pull list of all bills related to criteria into a dictionary
 Send UP TO 3 bills to phone number per day also stored in a dictionary {Name : Number}
 
 
