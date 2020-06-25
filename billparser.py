@@ -81,8 +81,8 @@ class c_getbillstodict () :
         d_di = dict (zipObj)
 
         #Pass to phonenumber_determineaction file
-        classins = phonenumber_determineaction.class_phonenumbersdetermineaction()
-        classins.method_actionfornumber(d_di)
+        classins = phonenumber_determineaction.c_phonenumbersdetermineaction()
+        classins.f_actionfornumber(d_di)
 
 ##################################
 # Main #
