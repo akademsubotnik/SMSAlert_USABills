@@ -7,8 +7,12 @@ import requests # library to get and parse webpages
 import time # wait before pulling page
 from bs4 import BeautifulSoup # selenium
 from selenium import webdriver # selenium
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.options import Options #To fetch webpage headless
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 import re # regular expressions
 import phonenumber_determineaction #To determine what bills and how many bills a specific phone number should recieve (Pass the dict {Date Introduced : Bills} after pulling from govtrack.us) (Step 2)
 
@@ -24,11 +28,13 @@ class c_getbillstodict () :
     #Function to access site (selenium)
     def f_visitsite_selenium (self) :
         #To run without opening browser window
+        # https://stackoverflow.com/questions/5370762/how-to-hide-firefox-window-selenium-webdriver #
+        # START #
         firefox_options = Options()
         firefox_options.add_argument('--headless')
         firefox_options.add_argument('--disable-gpu')
         driver = webdriver.Firefox(options=firefox_options)
-
+        # END #
         
         #Try to connect to website
         try :
@@ -37,6 +43,16 @@ class c_getbillstodict () :
         except Exception :
             print ("Unable to load page:", Exception)
 
+        ## TRY TO FETCH BILL RESULTS (Make sure page fully loads) ##
+        # https://stackoverflow.com/questions/26566799/wait-until-page-is-loaded-with-selenium-webdriver-for-python #
+        ## START ##
+        timeout = 5
+        try:
+            element_present = EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div[4]/div[2]/section/div/div[2]'))
+            WebDriverWait(driver, timeout).until(element_present)
+        except TimeoutException:
+            print ("Timed out waiting for page to load",TimeoutException)
+        ## END ##
         
         #Go to bottom of page
         ## https://stackoverflow.com/questions/20986631/how-can-i-scroll-a-web-page-using-selenium-webdriver-in-python  ##
