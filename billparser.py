@@ -1,3 +1,4 @@
+
 #!usr/bin/python
 
 
@@ -15,20 +16,28 @@ import phonenumber_determineaction #To determine what bills and how many bills a
 class c_getbillstodict () :
     
     def f_getsitename (self) :
-        s_sn = input ("Enter site name:")
+        #s_sn = input ("Enter site name:")
+        s_sn = "https://www.govtrack.us/congress/bills/browse?status=1,3&sort=-current_status_date#current_status[]=1,3&text=Ukraine"
+        #s_sn = "asdfasdfasdf"
         self.s_sn = s_sn
-        print ("Site name is: ", s_sn)
 
     #Function to access site (selenium)
     def f_visitsite_selenium (self) :
         #To run without opening browser window
-        options = Options()
-        Options.headless = True
+        firefox_options = Options()
+        firefox_options.add_argument('--headless')
+        firefox_options.add_argument('--disable-gpu')
+        driver = webdriver.Firefox(options=firefox_options)
 
-        #Get elements from webpage
-        driver = webdriver.Firefox()
-        driver.get(self.s_sn)
+        
+        #Try to connect to website
+        try :
+            #Get elements from webpage
+            driver.get(self.s_sn)
+        except Exception :
+            print ("Unable to load page:", Exception)
 
+        
         #Go to bottom of page
         ## https://stackoverflow.com/questions/20986631/how-can-i-scroll-a-web-page-using-selenium-webdriver-in-python  ##
         SCROLL_PAUSE_TIME = 0.5
@@ -52,7 +61,7 @@ class c_getbillstodict () :
 
         ## END  ##
 
-
+        ## Make Sure to Check to page was loaded, if not throw an exception ##
         #Get content of interest (bills)
         bills = driver.find_element_by_xpath("/html/body/div[1]/div[4]/div[2]/section/div/div[2]").text
         driver.quit()  
@@ -61,13 +70,14 @@ class c_getbillstodict () :
         #Next Divide them up into sections [Bill | Date Introduced | ]
         #{ Date Introduced : Bill }
         #writetofile(bills)
-
+        print ("Bills:",bills)
 
         #Date Introduced : [3 letters][space][1 or 2 numbers][comma][space][four numbers]
         #Date Introduced
         #[Introduced][Date]
         re_dateintroduced = re.findall("Introduced\n\D{3}\s\d{1,2}\,\s\d{4}" , bills)
 
+        #print ("Date Introduced:", re_dateintroduced)
         #Bills
         #[1 letter][dot][0 to 3 letters][NOTHING or dot][space][#][colon]
         #zn = re.findall("[A-Z]\..*\:", bills) # This print H.Res. #:
@@ -81,8 +91,8 @@ class c_getbillstodict () :
         d_di = dict (zipObj)
 
         #Pass to phonenumber_determineaction file
-        classins = phonenumber_determineaction.c_phonenumbersdetermineaction()
-        classins.f_actionfornumber(d_di)
+        #classins = phonenumber_determineaction.c_phonenumbersdetermineaction()
+        #classins.f_actionfornumber(d_di)
 
 ##################################
 # Main #
