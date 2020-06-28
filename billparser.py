@@ -17,36 +17,32 @@ import re # regular expressions
 import phonenumber_determineaction #To determine what bills and how many bills a specific phone number should recieve (Pass the dict {Date Introduced : Bills} after pulling from govtrack.us) (Step 2)
 
 
+def f_getsitename (arg_sitename) :
+    return arg_sitename
+        
 class c_getbillstodict () :
-    
-    def f_getsitename (self) :
-        #s_sn = input ("Enter site name:")
-        s_sn = "https://www.govtrack.us/congress/bills/browse?status=1,3&sort=-current_status_date#current_status[]=1,3&text=Ukraine"
-        #s_sn = "asdfasdfasdf"
-        self.s_sn = s_sn
 
-    def f_configurebrowseroptions (self) :
+    def __init__ (self, arg_sitename) :
+        self.s_sn = arg_sitename
         #To run without opening browser window
         # https://stackoverflow.com/questions/5370762/how-to-hide-firefox-window-selenium-webdriver #
         # START #
         firefox_options = Options()
         firefox_options.add_argument('--headless')
         firefox_options.add_argument('--disable-gpu')
-        driver = webdriver.Firefox(options=firefox_options)
-
-        return driver
+        self.driver = webdriver.Firefox(options=firefox_options)
         # END #
 
     #Function to access site (selenium)
     def f_visitsite_selenium (self) :
 
-        obj_driver = c_getbillstodict()
-        driver = obj_driver.f_configurebrowseroptions()
+        #obj_driver = c_getbillstodict()
+        #driver = obj_driver.f_configurebrowseroptions()
         
         #Try to connect to website
         try :
             #Get elements from webpage
-            driver.get(self.s_sn)
+            self.driver.get(self.s_sn)
         except Exception :
             print ("Unable to load page:", Exception)
 
@@ -56,7 +52,7 @@ class c_getbillstodict () :
         timeout = 5
         try:
             element_present = EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div[4]/div[2]/section/div/div[2]/div[1]'))
-            WebDriverWait(driver, timeout).until(element_present)
+            WebDriverWait(self.driver, timeout).until(element_present)
         except TimeoutException:
             print ("Timed out waiting for page to load",TimeoutException)
         ## END ##
@@ -66,17 +62,17 @@ class c_getbillstodict () :
         SCROLL_PAUSE_TIME = 0.5
 
         #Get scroll height
-        last_height = driver.execute_script("return document.body.scrollHeight")
+        last_height = self.driver.execute_script("return document.body.scrollHeight")
 
         while True :
             #Scroll down to bottom
-            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
             #Wait to load page
             time.sleep(SCROLL_PAUSE_TIME)
 
             #Calculate new scroll height and compare with last scroll height
-            new_height = driver.execute_script("return document.body.scrollHeight")
+            new_height = self.driver.execute_script("return document.body.scrollHeight")
 
             if new_height == last_height :
                 break
@@ -86,8 +82,8 @@ class c_getbillstodict () :
 
         ## Make Sure to Check to page was loaded, if not throw an exception ##
         #Get content of interest (bills)
-        bills = driver.find_element_by_xpath("/html/body/div[1]/div[4]/div[2]/section/div/div[2]").text
-        driver.quit()  
+        bills = self.driver.find_element_by_xpath("/html/body/div[1]/div[4]/div[2]/section/div/div[2]").text
+        self.driver.quit()  
 
         #Now you have the whole bills section, all of them
         #Next Divide them up into sections [Bill | Date Introduced | ]
@@ -135,9 +131,9 @@ class c_getbillstodict () :
 # Main #
 ##################################
 
+str_sitename = f_getsitename("https://www.govtrack.us/congress/bills/browse?status=1,3&sort=-current_status_date#current_status[]=1,3&text=Ukraine")
+
 ## Create class object ##
-o_instance =  c_getbillstodict()
-## Get Site Name ##
-o_instance.f_getsitename()
+o_instance =  c_getbillstodict(str_sitename)
 ## Visit Site/Move to Dict ##
 o_instance.f_visitsite_selenium()
