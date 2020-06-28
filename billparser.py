@@ -48,7 +48,7 @@ class c_getbillstodict () :
         ## START ##
         timeout = 5
         try:
-            element_present = EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div[4]/div[2]/section/div/div[2]'))
+            element_present = EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div[4]/div[2]/section/div/div[2]/div[1]'))
             WebDriverWait(driver, timeout).until(element_present)
         except TimeoutException:
             print ("Timed out waiting for page to load",TimeoutException)
@@ -85,15 +85,25 @@ class c_getbillstodict () :
         #Now you have the whole bills section, all of them
         #Next Divide them up into sections [Bill | Date Introduced | ]
         #{ Date Introduced : Bill }
-        #writetofile(bills)
-        print ("Bills:",bills)
-
         #Date Introduced : [3 letters][space][1 or 2 numbers][comma][space][four numbers]
         #Date Introduced
         #[Introduced][Date]
         re_dateintroduced = re.findall("Introduced\n\D{3}\s\d{1,2}\,\s\d{4}" , bills)
+        re_dateintroduced = re.sub('\'', '', str(re_dateintroduced)) # Remove ' character
+        
+        ## START ##
+        # https://stackoverflow.com/questions/25384333/python-re-sub-replace-substring-with-string
+        re_dateintroduced = re.sub('\s(?=I)' , '', str(re_dateintroduced)) # A space followed by a I (Look ahead buffer)
+        re_dateintroduced = re.sub("n(?=[A-Z])" , '', str(re_dateintroduced)) # A n followed by a capitol letter (Look ahead buffer)
+        ## END ##
 
-        #print ("Date Introduced:", re_dateintroduced)
+        re_dateintroduced = re.sub(r'\\' , ' ', str(re_dateintroduced)) # Replace \ with a space (https://bugs.python.org/issue29015)
+        
+        
+        print (re_dateintroduced)
+
+        
+        
         #Bills
         #[1 letter][dot][0 to 3 letters][NOTHING or dot][space][#][colon]
         #zn = re.findall("[A-Z]\..*\:", bills) # This print H.Res. #:
