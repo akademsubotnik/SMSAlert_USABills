@@ -24,7 +24,6 @@ class c_getbillstodict () :
 
     def __init__ (self, arg_sitename) :
         self.s_sn = arg_sitename
-        #To run without opening browser window
         # https://stackoverflow.com/questions/5370762/how-to-hide-firefox-window-selenium-webdriver #
         # START #
         firefox_options = Options()
@@ -36,9 +35,7 @@ class c_getbillstodict () :
         self.bills = []
 
     def f_trytoaccesssite(self) :
-        #Try to connect to website
         try :
-            #Get elements from webpage
             self.driver.get(self.s_sn)
         except Exception :
             print ("Unable to load page:", Exception)
@@ -80,20 +77,15 @@ class c_getbillstodict () :
         ## END  ##
 
         ## Make Sure to Check to page was loaded, if not throw an exception ##
-        #Get content of interest (bills)
         self.bills = self.driver.find_element_by_xpath("/html/body/div[1]/div[4]/div[2]/section/div/div[2]").text
         self.driver.quit()
 
 
     def f_sanitizebills (self) :
-        #Now you have the whole bills section, all of them
-        #Next Divide them up into sections [Bill | Date Introduced | ]
         #{ Date Introduced : Bill }
-        #Date Introduced : [3 letters][space][1 or 2 numbers][comma][space][four numbers]
-        #Date Introduced
-        #[Introduced][Date]
-        re_dateintroduced = re.findall("Introduced\n\D{3}\s\d{1,2}\,\s\d{4}" , self.bills)
 
+        #Date Introduced
+        re_dateintroduced = re.findall("Introduced\n\D{3}\s\d{1,2}\,\s\d{4}" , self.bills)
         # Start Sanitize #
         re_dateintroduced = re.sub('\'', '', str(re_dateintroduced)) # Remove ' character       
         ## START ##
@@ -106,10 +98,7 @@ class c_getbillstodict () :
 
         
         #Bills
-        #[1 letter][dot][0 to 3 letters][NOTHING or dot][space][#][colon]
-        #zn = re.findall("[A-Z]\..*\:", bills) # This print H.Res. #:
         re_bills = re.findall("[A-Z]\..*\:.+\n+?(?=Sponsor)",self.bills)
-
         # Start Sanitize #
         re_bills = re.sub('\'', '', str(re_bills)) # Remove ' character
         re_bills = re.sub(r'\\' , ' ', str(re_bills)) # Replace \ with a space (https://bugs.python.org/issue29015)
@@ -117,12 +106,13 @@ class c_getbillstodict () :
         re_bills = re.sub("(?<= )n(?=\])" , '', str(re_bills)) # Replace n with space before and ] after with nothing
         # End Sanitize #
         print (re_bills)
-    
+
+        #THIS SHOULD BE ANOTHER FUNCTION?
+        ## START ##
         #Join list re_dateintroduced and list re_bills
         zipObj = zip (re_dateintroduced, re_bills)
-        #Create a dictionary from zip object
-        #{ Date Introduced : Bill }
         d_di = dict (zipObj)
+        ## END ##
         
     #Function to access site (selenium)
     def f_visitsite_selenium (self) : 
@@ -142,12 +132,9 @@ o_instance =  c_getbillstodict(str_sitename)
 
 ## Try to access site ##
 o_instance.f_trytoaccesssite()
-
 ## Do Some Page stuff ##
 o_instance.f_dosomepagestuff()
-
 ## Sanitize Bills ##
 o_instance.f_sanitizebills()
-
 ## Visit Site/Move to Dict ##
 o_instance.f_visitsite_selenium()
