@@ -89,26 +89,28 @@ class c_getbillstodict () :
         #Date Introduced
         #[Introduced][Date]
         re_dateintroduced = re.findall("Introduced\n\D{3}\s\d{1,2}\,\s\d{4}" , bills)
-        re_dateintroduced = re.sub('\'', '', str(re_dateintroduced)) # Remove ' character
-        
+
+        # Start Sanitize #
+        re_dateintroduced = re.sub('\'', '', str(re_dateintroduced)) # Remove ' character       
         ## START ##
         # https://stackoverflow.com/questions/25384333/python-re-sub-replace-substring-with-string
         re_dateintroduced = re.sub('\s(?=I)' , '', str(re_dateintroduced)) # A space followed by a I (Look ahead buffer)
         re_dateintroduced = re.sub("n(?=[A-Z])" , '', str(re_dateintroduced)) # A n followed by a capitol letter (Look ahead buffer)
         ## END ##
-
         re_dateintroduced = re.sub(r'\\' , ' ', str(re_dateintroduced)) # Replace \ with a space (https://bugs.python.org/issue29015)
-        
-        
-        print (re_dateintroduced)
+        # End Sanitize #
 
-        
         
         #Bills
         #[1 letter][dot][0 to 3 letters][NOTHING or dot][space][#][colon]
         #zn = re.findall("[A-Z]\..*\:", bills) # This print H.Res. #:
         re_bills = re.findall("[A-Z]\..*\:.+\n+?(?=Sponsor)",bills)
 
+        # Start Sanitize #
+        re_bills = re.sub('\'', '', str(re_bills)) # Remove ' character
+        re_bills = re.sub(r'\\' , ' ', str(re_bills)) # Replace \ with a space (https://bugs.python.org/issue29015)
+        re_bills = re.sub("(?<= )n(?=\,)" , '', str(re_bills)) # Replace n with space before and , after with nothing
+        # End Sanitize #
 
         #Join list re_dateintroduced and list re_bills
         zipObj = zip (re_dateintroduced, re_bills)
