@@ -33,12 +33,9 @@ class c_getbillstodict () :
         self.driver = webdriver.Firefox(options=firefox_options)
         # END #
 
-    #Function to access site (selenium)
-    def f_visitsite_selenium (self) :
+        self.bills = []
 
-        #obj_driver = c_getbillstodict()
-        #driver = obj_driver.f_configurebrowseroptions()
-        
+    def f_trytoaccesssite(self) :
         #Try to connect to website
         try :
             #Get elements from webpage
@@ -46,6 +43,8 @@ class c_getbillstodict () :
         except Exception :
             print ("Unable to load page:", Exception)
 
+    def f_dosomepagestuff (self) :
+        
         ## TRY TO FETCH BILL RESULTS (Make sure page fully loads) ##
         # https://stackoverflow.com/questions/26566799/wait-until-page-is-loaded-with-selenium-webdriver-for-python #
         ## START ##
@@ -82,16 +81,18 @@ class c_getbillstodict () :
 
         ## Make Sure to Check to page was loaded, if not throw an exception ##
         #Get content of interest (bills)
-        bills = self.driver.find_element_by_xpath("/html/body/div[1]/div[4]/div[2]/section/div/div[2]").text
-        self.driver.quit()  
+        self.bills = self.driver.find_element_by_xpath("/html/body/div[1]/div[4]/div[2]/section/div/div[2]").text
+        self.driver.quit()
 
+
+    def f_sanitizebills (self) :
         #Now you have the whole bills section, all of them
         #Next Divide them up into sections [Bill | Date Introduced | ]
         #{ Date Introduced : Bill }
         #Date Introduced : [3 letters][space][1 or 2 numbers][comma][space][four numbers]
         #Date Introduced
         #[Introduced][Date]
-        re_dateintroduced = re.findall("Introduced\n\D{3}\s\d{1,2}\,\s\d{4}" , bills)
+        re_dateintroduced = re.findall("Introduced\n\D{3}\s\d{1,2}\,\s\d{4}" , self.bills)
 
         # Start Sanitize #
         re_dateintroduced = re.sub('\'', '', str(re_dateintroduced)) # Remove ' character       
@@ -107,7 +108,7 @@ class c_getbillstodict () :
         #Bills
         #[1 letter][dot][0 to 3 letters][NOTHING or dot][space][#][colon]
         #zn = re.findall("[A-Z]\..*\:", bills) # This print H.Res. #:
-        re_bills = re.findall("[A-Z]\..*\:.+\n+?(?=Sponsor)",bills)
+        re_bills = re.findall("[A-Z]\..*\:.+\n+?(?=Sponsor)",self.bills)
 
         # Start Sanitize #
         re_bills = re.sub('\'', '', str(re_bills)) # Remove ' character
@@ -116,17 +117,20 @@ class c_getbillstodict () :
         re_bills = re.sub("(?<= )n(?=\])" , '', str(re_bills)) # Replace n with space before and ] after with nothing
         # End Sanitize #
         print (re_bills)
-
+    
         #Join list re_dateintroduced and list re_bills
         zipObj = zip (re_dateintroduced, re_bills)
         #Create a dictionary from zip object
         #{ Date Introduced : Bill }
         d_di = dict (zipObj)
-
+        
+    #Function to access site (selenium)
+    def f_visitsite_selenium (self) : 
         #Pass to phonenumber_determineaction file
         #classins = phonenumber_determineaction.c_phonenumbersdetermineaction()
         #classins.f_actionfornumber(d_di)
-
+        print ("f_visit_selenium")
+        
 ##################################
 # Main #
 ##################################
@@ -135,5 +139,15 @@ str_sitename = f_getsitename("https://www.govtrack.us/congress/bills/browse?stat
 
 ## Create class object ##
 o_instance =  c_getbillstodict(str_sitename)
+
+## Try to access site ##
+o_instance.f_trytoaccesssite()
+
+## Do Some Page stuff ##
+o_instance.f_dosomepagestuff()
+
+## Sanitize Bills ##
+o_instance.f_sanitizebills()
+
 ## Visit Site/Move to Dict ##
 o_instance.f_visitsite_selenium()
