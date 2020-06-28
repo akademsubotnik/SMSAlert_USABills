@@ -25,8 +25,7 @@ class c_getbillstodict () :
         #s_sn = "asdfasdfasdf"
         self.s_sn = s_sn
 
-    #Function to access site (selenium)
-    def f_visitsite_selenium (self) :
+    def f_configurebrowseroptions (self) :
         #To run without opening browser window
         # https://stackoverflow.com/questions/5370762/how-to-hide-firefox-window-selenium-webdriver #
         # START #
@@ -34,7 +33,15 @@ class c_getbillstodict () :
         firefox_options.add_argument('--headless')
         firefox_options.add_argument('--disable-gpu')
         driver = webdriver.Firefox(options=firefox_options)
+
+        return driver
         # END #
+
+    #Function to access site (selenium)
+    def f_visitsite_selenium (self) :
+
+        obj_driver = c_getbillstodict()
+        driver = obj_driver.f_configurebrowseroptions()
         
         #Try to connect to website
         try :
@@ -110,7 +117,9 @@ class c_getbillstodict () :
         re_bills = re.sub('\'', '', str(re_bills)) # Remove ' character
         re_bills = re.sub(r'\\' , ' ', str(re_bills)) # Replace \ with a space (https://bugs.python.org/issue29015)
         re_bills = re.sub("(?<= )n(?=\,)" , '', str(re_bills)) # Replace n with space before and , after with nothing
+        re_bills = re.sub("(?<= )n(?=\])" , '', str(re_bills)) # Replace n with space before and ] after with nothing
         # End Sanitize #
+        print (re_bills)
 
         #Join list re_dateintroduced and list re_bills
         zipObj = zip (re_dateintroduced, re_bills)
