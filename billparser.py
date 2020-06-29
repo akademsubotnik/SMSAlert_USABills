@@ -90,7 +90,7 @@ class c_getbillstodict () :
         re_dateintroduced = re.sub('\'', '', str(re_dateintroduced)) # Remove ' character       
         ## START ##
         # https://stackoverflow.com/questions/25384333/python-re-sub-replace-substring-with-string
-        re_dateintroduced = re.sub('\s(?=I)' , '', str(re_dateintroduced)) # A space followed by a I (Look ahead buffer)
+        re_dateintroduced = re.sub('\s(?=I)' , '@', str(re_dateintroduced)) # A space followed by a I (Look ahead buffer)
         re_dateintroduced = re.sub("n(?=[A-Z])" , '', str(re_dateintroduced)) # A n followed by a capitol letter (Look ahead buffer)
         ## END ##
         re_dateintroduced = re.sub(r'\\' , ' ', str(re_dateintroduced)) # Replace \ with a space (https://bugs.python.org/issue29015)
@@ -110,7 +110,7 @@ class c_getbillstodict () :
         ## START ##
         #Join list re_dateintroduced and list re_bills
         ## re_dateintroduced and re_bills were strings making them lists again so that you can combine them into a single dicitonary with zip (list1,list2) function##
-        re_dateintroduced = re_dateintroduced.split(",I")
+        re_dateintroduced = re_dateintroduced.split(",@")
         re_bills = re_bills.split(", ")
         
         zipObj = zip (re_dateintroduced, re_bills)
