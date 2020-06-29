@@ -105,21 +105,25 @@ class c_getbillstodict () :
         re_bills = re.sub("(?<= )n(?=\,)" , '', str(re_bills)) # Replace n with space before and , after with nothing
         re_bills = re.sub("(?<= )n(?=\])" , '', str(re_bills)) # Replace n with space before and ] after with nothing
         # End Sanitize #
-        print (re_bills)
 
         #THIS SHOULD BE ANOTHER FUNCTION?
         ## START ##
         #Join list re_dateintroduced and list re_bills
+        ## re_dateintroduced and re_bills were strings making them lists again so that you can combine them into a single dicitonary with zip (list1,list2) function##
+        re_dateintroduced = re_dateintroduced.split(",I")
+        re_bills = re_bills.split(", ")
+        
         zipObj = zip (re_dateintroduced, re_bills)
         d_di = dict (zipObj)
+        print (d_di)
         ## END ##
         
     #Function to access site (selenium)
-    def f_visitsite_selenium (self) : 
+    #def f_visitsite_selenium (self) : 
         #Pass to phonenumber_determineaction file
         #classins = phonenumber_determineaction.c_phonenumbersdetermineaction()
         #classins.f_actionfornumber(d_di)
-        print ("f_visit_selenium")
+        #print ("f_visit_selenium")
         
 ##################################
 # Main #
@@ -136,5 +140,4 @@ o_instance.f_trytoaccesssite()
 o_instance.f_dosomepagestuff()
 ## Sanitize Bills ##
 o_instance.f_sanitizebills()
-## Visit Site/Move to Dict ##
-o_instance.f_visitsite_selenium()
+
