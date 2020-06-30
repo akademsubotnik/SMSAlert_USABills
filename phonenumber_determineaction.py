@@ -20,19 +20,11 @@ class c_phonenumbersdetermineaction :
         self.string_message = arg_stringmessage
         for i in self.list_phonenumbers :
             #If File #.txt exists
-            if (os.path.exists("/home/greg/Projects/Linux/python/BillParser_Project/phonenumber_files/{0}.txt".format(i)) ) :
+            if (os.path.exists("/home/greg/Projects/Projects/python/BillParser_Project/phonenumber_files/{0}.txt".format(i)) ) :
                 try :
                     #Send the top 3 from that file and then remove them
-                    file_obj = open ("/home/greg/Projects/Linux/python/BillParser_Project/phonenumber_files/{0}.txt".format(i), "r")
-                    str_tmp = file_obj.read()
-
-                    #Read through the temporary string and move the first 3 [Date Introduced][Bill] into a variable
-
-                    ### EDIT HERE ###
-                    re_dateintroduced = re.search("Introduced.{2}\D{3}\s\d{1,2}\,\s\d{4}.\:.* \n" , str_tmp)
-                    print (re_dateintroduced)
-                    #print (str_tmp)
-
+                    file_obj = open ("/home/greg/Projects/Projects/python/BillParser_Project/phonenumber_files/{0}.txt".format(i), "r")
+                    print (i, file_obj.read())
                     
                     file_obj.close()
                 except IOError :
@@ -43,7 +35,7 @@ class c_phonenumbersdetermineaction :
                 #Create a file #.txt
                 try :
                     #Create File Here FOLLOW DICTIONARY WRITING TO FILE RULES
-                    with open ("/home/greg/Projects/Linux/python/BillParser_Project/phonenumber_files/{0}.txt".format(i), "w") as file_obj:
+                    with open ("/home/greg/Projects/Projects/python/BillParser_Project/phonenumber_files/{0}.txt".format(i), "w") as file_obj:
                         #Write to File
                         try :
                             print (self.string_message, file=file_obj)
@@ -54,11 +46,4 @@ class c_phonenumbersdetermineaction :
                     print ("Error! Problem Creating File", IOError)
 
 
-
-
 ## Main () ##
-#List with all phone numbers (manually append when you get a new number)
-#string_messageto = "Hi0"
-
-#obj_exOne = class_phonenumbersdetermineaction()
-#obj_exOne.method_actionfornumber(string_messageto)
