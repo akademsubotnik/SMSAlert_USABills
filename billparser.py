@@ -39,9 +39,9 @@ class c_getbillstodict () :
         d_di = dict (zipObj)
         print (d_di)
 
-
         #Send to phone
-        ## CODE TO SEND TO PHONE HERE ##
+        #classins = phonenumber_determineaction.c_phonenumbersdetermineaction()
+        #classins.f_actionfornumber(d_di)
 
     def f_trytoaccesssite(self) :
         try :
@@ -98,13 +98,6 @@ class c_getbillstodict () :
         self.re_bills = re.sub("(?<= )n(?=\])" , '', str(self.re_bills))
         # End Sanitize #
 
-        
-    #Function to access site (selenium)
-    #def f_visitsite_selenium (self) : 
-        #Pass to phonenumber_determineaction file
-        #classins = phonenumber_determineaction.c_phonenumbersdetermineaction()
-        #classins.f_actionfornumber(d_di)
-        #print ("f_visit_selenium")
         
 ##################################
 # Main #
