@@ -1,4 +1,3 @@
-
 #!usr/bin/python
 
 
@@ -29,6 +28,20 @@ class c_getbillstodict () :
         firefox_options.add_argument('--disable-gpu')
         self.driver = webdriver.Firefox(options=firefox_options)
         self.bills = []
+        self.re_dateintroduced = []
+        self.re_bills = []
+
+    def f_sendtophone (self) :
+        # re_dateintroduced/re_bills were strings, convert them to be lists
+        self.re_dateintroduced = self.re_dateintroduced.split(",@")
+        self.re_bills = self.re_bills.split(", ")        
+        zipObj = zip (self.re_dateintroduced, self.re_bills)
+        d_di = dict (zipObj)
+        print (d_di)
+
+
+        #Send to phone
+        ## CODE TO SEND TO PHONE HERE ##
 
     def f_trytoaccesssite(self) :
         try :
@@ -65,37 +78,26 @@ class c_getbillstodict () :
 
     def f_sanitizebills (self) :
         #{ Date Introduced : Bill }
-
+        
         #Date Introduced
-        re_dateintroduced = re.findall("Introduced\n\D{3}\s\d{1,2}\,\s\d{4}" , self.bills)
+        self.re_dateintroduced = re.findall("Introduced\n\D{3}\s\d{1,2}\,\s\d{4}" , self.bills)
         # Start Sanitize #
-        re_dateintroduced = re.sub('\'', '', str(re_dateintroduced)) # Remove ' character       
-        re_dateintroduced = re.sub('\s(?=I)' , '@', str(re_dateintroduced)) # A space followed by a I (Look ahead buffer)
-        re_dateintroduced = re.sub("n(?=[A-Z])" , '', str(re_dateintroduced)) # A n followed by a capitol letter (Look ahead buffer)
-        re_dateintroduced = re.sub(r'\\' , ' ', str(re_dateintroduced)) # Replace \ with a space
+        self.re_dateintroduced = re.sub('\'', '', str(self.re_dateintroduced))    
+        self.re_dateintroduced = re.sub('\s(?=I)' , '@', str(self.re_dateintroduced)) # Replace with @, will be easier when converting back to a list
+        self.re_dateintroduced = re.sub("n(?=[A-Z])" , '', str(self.re_dateintroduced))
+        self.re_dateintroduced = re.sub(r'\\' , ' ', str(self.re_dateintroduced))
         # End Sanitize #
 
         
         #Bills
-        re_bills = re.findall("[A-Z]\..*\:.+\n+?(?=Sponsor)",self.bills)
+        self.re_bills = re.findall("[A-Z]\..*\:.+\n+?(?=Sponsor)",self.bills)
         # Start Sanitize #
-        re_bills = re.sub('\'', '', str(re_bills)) # Remove ' character
-        re_bills = re.sub(r'\\' , ' ', str(re_bills)) # Replace \ with a space
-        re_bills = re.sub("(?<= )n(?=\,)" , '', str(re_bills)) # Replace n with space before and , after with nothing
-        re_bills = re.sub("(?<= )n(?=\])" , '', str(re_bills)) # Replace n with space before and ] after with nothing
+        self.re_bills = re.sub('\'', '', str(self.re_bills))
+        self.re_bills = re.sub(r'\\' , ' ', str(self.re_bills))
+        self.re_bills = re.sub("(?<= )n(?=\,)" , '', str(self.re_bills))
+        self.re_bills = re.sub("(?<= )n(?=\])" , '', str(self.re_bills))
         # End Sanitize #
 
-        #THIS SHOULD BE ANOTHER FUNCTION?
-        ## START ##
-        #Join list re_dateintroduced and list re_bills
-        ## re_dateintroduced and re_bills were strings making them lists again so that you can combine them into a single dicitonary with zip (list1,list2) function##
-        re_dateintroduced = re_dateintroduced.split(",@")
-        re_bills = re_bills.split(", ")
-        
-        zipObj = zip (re_dateintroduced, re_bills)
-        d_di = dict (zipObj)
-        print (d_di)
-        ## END ##
         
     #Function to access site (selenium)
     #def f_visitsite_selenium (self) : 
@@ -119,6 +121,10 @@ o_instance.f_trytoaccesssite()
 o_instance.f_dosomepagestuff()
 ## Sanitize Bills ##
 o_instance.f_sanitizebills()
+## Send To Phone ##
+o_instance.f_sendtophone()
+
+
 
 
 ## Attribution ##
