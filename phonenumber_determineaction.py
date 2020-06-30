@@ -24,7 +24,12 @@ class c_phonenumbersdetermineaction :
                 try :
                     #Send the top 3 from that file and then remove them
                     file_obj = open ("/home/greg/Projects/Projects/python/BillParser_Project/phonenumber_files/{0}.txt".format(i), "r")
-                    print (i, file_obj.read())
+                    #Contains txt file
+                    str_fromfile = file_obj.read()
+                    #Move into list, remove first element and send to phone and return to list with the one element removed
+                    l_fromfile = str_fromfile.split("', 'I")
+                    print (l_fromfile[2])
+                    
                     
                     file_obj.close()
                 except IOError :
