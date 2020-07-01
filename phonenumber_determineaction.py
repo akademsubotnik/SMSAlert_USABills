@@ -36,7 +36,10 @@ class c_phonenumbersdetermineaction :
                     # Delete File #
                     os.remove("/home/greg/Projects/Projects/python/BillParser_Project/phonenumber_files/{0}.txt".format(i))
                     # Create File #
+                    file_objwrite = open ("/home/greg/Projects/Projects/python/BillParser_Project/phonenumber_files/{0}.txt".format(i), "w")
                     # Write to File List minus last element #
+                    file_objwrite.write(str(l_fromfile))
+                    file_objwrite.close()
                     # Send to phone the last list element #
                     
                     
