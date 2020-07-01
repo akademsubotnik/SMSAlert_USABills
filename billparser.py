@@ -34,14 +34,13 @@ class c_getbillstodict () :
     def f_sendtophone (self) :
         # re_dateintroduced/re_bills were strings, convert them to be lists
         self.re_dateintroduced = self.re_dateintroduced.split(",@")
-        self.re_bills = self.re_bills.split(", ")        
+        self.re_bills = self.re_bills.split(" , ")
         zipObj = zip (self.re_dateintroduced, self.re_bills)
         d_di = dict (zipObj)
-        print (d_di)
-
+        
         #Send to phone
-        #classins = phonenumber_determineaction.c_phonenumbersdetermineaction()
-        #classins.f_actionfornumber(d_di)
+        classins = phonenumber_determineaction.c_phonenumbersdetermineaction()
+        classins.f_actionfornumber(d_di)
 
     def f_trytoaccesssite(self) :
         try :
@@ -92,10 +91,11 @@ class c_getbillstodict () :
         #Bills
         self.re_bills = re.findall("[A-Z]\..*\:.+\n+?(?=Sponsor)",self.bills)
         # Start Sanitize #
-        self.re_bills = re.sub('\'', '', str(self.re_bills))
+        self.re_bills = re.sub('\'', ' ', str(self.re_bills))
         self.re_bills = re.sub(r'\\' , ' ', str(self.re_bills))
         self.re_bills = re.sub("(?<= )n(?=\,)" , '', str(self.re_bills))
         self.re_bills = re.sub("(?<= )n(?=\])" , '', str(self.re_bills))
+        self.re_bills = re.sub("(?<= )n(?= )",'',str(self.re_bills))
         # End Sanitize #
 
         
