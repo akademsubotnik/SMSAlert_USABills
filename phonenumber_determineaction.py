@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import os.path
+import os
 import re
 
 #Use this class to create what you will send to the phonenumbers dictionary
@@ -27,11 +27,19 @@ class c_phonenumbersdetermineaction :
                     #Contains txt file
                     str_fromfile = file_obj.read()
                     #Move into list, remove first element and send to phone and return to list with the one element removed
-                    l_fromfile = str_fromfile.split("', 'I")
-                    print (l_fromfile[2])
-                    
-                    
+                    l_fromfile = str_fromfile.split("', '")
+                    l_lastelement = l_fromfile.pop()
                     file_obj.close()
+                    print(l_lastelement)
+                    
+
+                    # Delete File #
+                    os.remove("/home/greg/Projects/Projects/python/BillParser_Project/phonenumber_files/{0}.txt".format(i))
+                    # Create File #
+                    # Write to File List minus last element #
+                    # Send to phone the last list element #
+                    
+                    
                 except IOError :
                     print ("Error! Problem Opening File", IOError)
 
