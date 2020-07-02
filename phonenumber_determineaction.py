@@ -8,14 +8,26 @@ import re
 
 class c_phonenumbersdetermineaction :
 
+    # def send(self,message):
+    #     carriers = carriers = {
+    #         'att':    '@mms.att.net',
+    #         'tmobile':' @tmomail.net',
+    #         'verizon':  '@vtext.com',
+    #         'vzpix' : '@vzwpix.com',
+    #         'sprint':   '@page.nextel.com'
+    #     }
+          
+    
     def __init__ (self) :
+        dict_numbercarrier = {19145821666 : "@vzpix.com", 19145824751 : "@redpocketmobile.com", 19147037991 : "@vzpix.com"}
+        self.dict_numbercarrier = dict_numbercarrier
         list_phonenumbers = [19145821666, 19145824751, 19147037991]
         self.list_phonenumbers = list_phonenumbers
     
     def f_actionfornumber (self, arg_stringmessage) :
         
         self.string_message = arg_stringmessage
-        for i in self.list_phonenumbers :
+        for i in self.dict_numbercarrier :
             #If File #.txt exists
             if (os.path.exists("/home/greg/Projects/Projects/python/BillParser_Project/phonenumber_files/{0}.txt".format(i)) ) :
                 try :
@@ -25,6 +37,7 @@ class c_phonenumbersdetermineaction :
                     l_lastelement = l_fromfile.pop()
                     file_obj.close()
                     #sendtophonefile (l_lastelement, l_phonenumber, carrier) # <-- contains the last bill # You should also send the phone number as well #Send carrier also
+                    print (l_lastelement)
 
                     # Delete File #
                     os.remove("/home/greg/Projects/Projects/python/BillParser_Project/phonenumber_files/{0}.txt".format(i))
