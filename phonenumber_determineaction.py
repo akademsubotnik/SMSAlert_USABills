@@ -52,13 +52,12 @@ class c_phonenumbersdetermineaction :
                 list_stringmessage = str(self.string_message).split("', '") # Split the variable into a list and get the last element of the list
                 l_lastelement0 = list_stringmessage.pop()                
                 #sendtophonefile (l_lastelement0) # <-- contains the last bill
-                print (list_stringmessage) # <-- contains the bills, minus the last bill
                 #Create a file #.txt
                 try :
                     file_obj0 = open("/home/greg/Projects/Projects/python/BillParser_Project/phonenumber_files/{0}.txt".format(i), "w")
                     #Write to File
                     try :                        
-                        file_obj0.write(str(self.string_message))
+                        file_obj0.write(str(list_stringmessage)) # list_stringmessage contains the bills (minus last bill)
                     except IOError :
                         print ("Error! Problem Writing To File", IOError)
                         file_obj0.close()
