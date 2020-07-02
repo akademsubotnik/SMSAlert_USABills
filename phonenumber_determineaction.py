@@ -24,7 +24,7 @@ class c_phonenumbersdetermineaction :
                     l_fromfile = str_fromfile.split('", "')
                     l_lastelement = l_fromfile.pop()
                     file_obj.close()
-                    #sendtophonefile (l_lastelement) # <-- contains the last bill
+                    #sendtophonefile (l_lastelement, l_phonenumber, carrier) # <-- contains the last bill # You should also send the phone number as well #Send carrier also
 
                     # Delete File #
                     os.remove("/home/greg/Projects/Projects/python/BillParser_Project/phonenumber_files/{0}.txt".format(i))
