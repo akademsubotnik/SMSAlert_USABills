@@ -3,6 +3,7 @@
 
 import os
 import re
+import sendtophone
 
 # Recieve bills from {billparser.py} > Remove last bill > Send to phone {sendtophone.py} > Write to #.txt
 
@@ -34,8 +35,11 @@ class c_phonenumbersdetermineaction :
                     l_fromfile = str_fromfile.split('", "')
                     l_lastelement = l_fromfile.pop()
                     file_obj.close()
-                    #sendtophonefile ( l_lastelement, i, self.dict_numbercarrier[i] )  # <-- contains the last bill # You should also send the phone number as well #Send carrier also
-                    print (l_lastelement, i, self.dict_numbercarrier[i])
+
+                    #Send to phone
+                    classins = sendtophone.c_sendtophone()
+                    classins.f_sendtophone(l_lastelement, i, self.dict_numbercarrier[i])
+                    #print (l_lastelement, i, self.dict_numbercarrier[i])
 
                     # Delete File #
                     os.remove("/home/greg/Projects/Projects/python/BillParser_Project/phonenumber_files/{0}.txt".format(i))
@@ -51,7 +55,7 @@ class c_phonenumbersdetermineaction :
             else:
                 list_stringmessage = str(self.string_message).split("', '") # Split the variable into a list and get the last element of the list
                 l_lastelement0 = list_stringmessage.pop()
-                print (l_lastelement0, i, self.dict_numbercarrier[i])
+                #print (l_lastelement0, i, self.dict_numbercarrier[i])
                 #sendtophonefile (l_lastelement0, i, self.dict_numbercarrier[i]) # <-- contains the last bill/phonenumber/phonecarrier
                 #Create a file #.txt
                 try :
