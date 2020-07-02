@@ -31,7 +31,7 @@ class c_phonenumbersdetermineaction :
                     l_fromfile = str_fromfile.split('", "')
                     l_lastelement = l_fromfile.pop()
                     file_obj.close()
-                    print (l_lastelement)
+                    #print (l_lastelement)
                     #sendtophonefile (l_lastelement) # <-- contains the last bill
 
                     
@@ -41,7 +41,10 @@ class c_phonenumbersdetermineaction :
                     # Create File #
                     file_objwrite = open ("/home/greg/Projects/Projects/python/BillParser_Project/phonenumber_files/{0}.txt".format(i), "w")
                     # Write to File List minus last element #
-                    file_objwrite.write(str(l_fromfile))
+                    # Remove \
+                    #re.sub ("\\",'',str(l_fromfile))
+                    
+                    file_objwrite.write(str(l_fromfile).replace("\\",""))
                     file_objwrite.close()
                     # Send to phone the last list element #
                     
