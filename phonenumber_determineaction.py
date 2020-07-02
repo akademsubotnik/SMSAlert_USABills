@@ -31,7 +31,9 @@ class c_phonenumbersdetermineaction :
                     l_fromfile = str_fromfile.split('", "')
                     l_lastelement = l_fromfile.pop()
                     file_obj.close()
-                    print(l_lastelement)
+                    print (l_lastelement)
+                    #sendtophonefile (l_lastelement) # <-- contains the last bill
+
                     
 
                     # Delete File #
