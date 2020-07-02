@@ -1,3 +1,4 @@
+
 #!/usr/bin/python
 
 import os
@@ -27,7 +28,7 @@ class c_phonenumbersdetermineaction :
                     #Contains txt file
                     str_fromfile = file_obj.read()
                     #Move into list, remove first element and send to phone and return to list with the one element removed
-                    l_fromfile = str_fromfile.split("', '")
+                    l_fromfile = str_fromfile.split('", "')
                     l_lastelement = l_fromfile.pop()
                     file_obj.close()
                     print(l_lastelement)
@@ -48,16 +49,19 @@ class c_phonenumbersdetermineaction :
 
             #If file does not exist for number create a neew file that contains all of the bills with the format of #.txt
             else:
+                list_stringmessage = str(self.string_message).split("', '") # Split the variable into a list and get the last element of the list
+                l_lastelement0 = list_stringmessage.pop()                
+                #sendtophonefile (l_lastelement0) # <-- contains the last bill
+                print (list_stringmessage) # <-- contains the bills, minus the last bill
                 #Create a file #.txt
                 try :
-                    #Create File Here FOLLOW DICTIONARY WRITING TO FILE RULES
-                    with open ("/home/greg/Projects/Projects/python/BillParser_Project/phonenumber_files/{0}.txt".format(i), "w") as file_obj:
-                        #Write to File
-                        try :
-                            print (self.string_message, file=file_obj)
-                        except IOError :
-                            print ("Error! Problem Writing To File", IOError)
-                        file_obj.close()
+                    file_obj0 = open("/home/greg/Projects/Projects/python/BillParser_Project/phonenumber_files/{0}.txt".format(i), "w")
+                    #Write to File
+                    try :                        
+                        file_obj0.write(str(self.string_message))
+                    except IOError :
+                        print ("Error! Problem Writing To File", IOError)
+                        file_obj0.close()
                 except IOError :
                     print ("Error! Problem Creating File", IOError)
 
