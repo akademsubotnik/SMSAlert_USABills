@@ -21,8 +21,6 @@ class c_phonenumbersdetermineaction :
     def __init__ (self) :
         dict_numbercarrier = {19145821666 : "@vzpix.com", 19145824751 : "@redpocketmobile.com", 19147037991 : "@vzpix.com"}
         self.dict_numbercarrier = dict_numbercarrier
-        list_phonenumbers = [19145821666, 19145824751, 19147037991]
-        self.list_phonenumbers = list_phonenumbers
     
     def f_actionfornumber (self, arg_stringmessage) :
         
@@ -36,8 +34,8 @@ class c_phonenumbersdetermineaction :
                     l_fromfile = str_fromfile.split('", "')
                     l_lastelement = l_fromfile.pop()
                     file_obj.close()
-                    #sendtophonefile (l_lastelement, l_phonenumber, carrier) # <-- contains the last bill # You should also send the phone number as well #Send carrier also
-                    print (l_lastelement)
+                    #sendtophonefile ( l_lastelement, i, self.dict_numbercarrier[i] )  # <-- contains the last bill # You should also send the phone number as well #Send carrier also
+                    print (l_lastelement, i, self.dict_numbercarrier[i])
 
                     # Delete File #
                     os.remove("/home/greg/Projects/Projects/python/BillParser_Project/phonenumber_files/{0}.txt".format(i))
@@ -52,8 +50,9 @@ class c_phonenumbersdetermineaction :
             #If file does not exist for number create a neew file that contains all of the bills with the format of #.txt
             else:
                 list_stringmessage = str(self.string_message).split("', '") # Split the variable into a list and get the last element of the list
-                l_lastelement0 = list_stringmessage.pop()                
-                #sendtophonefile (l_lastelement0) # <-- contains the last bill
+                l_lastelement0 = list_stringmessage.pop()
+                print (l_lastelement0, i, self.dict_numbercarrier[i])
+                #sendtophonefile (l_lastelement0, i, self.dict_numbercarrier[i]) # <-- contains the last bill/phonenumber/phonecarrier
                 #Create a file #.txt
                 try :
                     file_obj0 = open("/home/greg/Projects/Projects/python/BillParser_Project/phonenumber_files/{0}.txt".format(i), "w")
